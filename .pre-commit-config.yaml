@@ -1,0 +1,20 @@
+---
+repos:
+  - repo: https://github.com/norwoodj/helm-docs
+    rev: v1.14.2
+    hooks:
+      - id: helm-docs
+        args:
+          - --output-file=README.md
+          - --template-files=README.md.gotmpl
+          - --chart-search-root=helm/s3wwww/
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+        args:
+          - --allow-multiple-documents
+        exclude: ^helm/[^/]+/templates/
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
