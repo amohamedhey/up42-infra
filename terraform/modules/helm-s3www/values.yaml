@@ -1,0 +1,57 @@
+# MinIO configuration
+minio:
+  accessKey: ${minio_access_key}
+  secretKey: ${minio_secret_key}
+  bucketName: ${minio_bucket}
+  endpoint: ${minio_endpoint}
+
+# ConfigMap configuration
+configMap:
+  name: "s3-files-configmap"
+  data: ${jsonencode(configmap_data)}
+
+# Deployment configuration
+replicaCount: ${replica_count}
+
+# Image configuration
+image:
+  repository: ${image_repository}
+  tag: ${image_tag}
+  pullPolicy: IfNotPresent
+
+# Service configuration
+service:
+  type: ${service_type}
+  port: ${service_port}
+
+# Resource configuration
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Liveness and readiness probes
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+ingress:
+  enabled: ${ingress_enabled}
+  hosts:
+    - host: ${ingress_host}
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
