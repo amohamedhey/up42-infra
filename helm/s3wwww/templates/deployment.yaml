@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "s3wwww.fullname" . }}
+  labels:
+    {{- include "s3wwww.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "s3wwww.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "s3wwww.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      initContainers:
+        - name: init-s3-copy
+          image: minio/mc:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              # Wait for MinIO to be ready
+              until mc alias set myminio {{ .Values.minio.endpoint }} {{ .Values.minio.accessKey }} {{ .Values.minio.secretKey }} --insecure; do
+                echo "Waiting for MinIO to be ready..."
+                sleep 5
+              done
+
+              # Create bucket if it doesn't exist
+              mc mb myminio/{{ .Values.minio.bucketName }} --ignore-existing --insecure
+              if [ $? -eq 0 ]; then
+                echo "Bucket created successfully"
+              else
+                echo "Bucket already exists"
+              fi
+
+              # Copy files from ConfigMap to S3
+              mc cp /configmap-data/* myminio/{{ .Values.minio.bucketName }}/ --insecure
+
+              echo "Files copied successfully"
+          volumeMounts:
+            - name: configmap-data
+              mountPath: /configmap-data
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "s3wwww.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "-endpoint={{ .Values.minio.endpoint }}"
+            - "-accessKey={{ .Values.minio.accessKey }}"
+            - "-secretKey={{ .Values.minio.secretKey }}"
+            - "-bucket={{ .Values.minio.bucketName }}"
+            - "-address={{ .Values.app.address }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: configmap-data
+          configMap:
+            name: {{ .Values.configMap.name }}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

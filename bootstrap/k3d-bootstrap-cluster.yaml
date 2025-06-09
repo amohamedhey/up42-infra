@@ -1,0 +1,29 @@
+---
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: up42-dev
+
+# Cluster resources.
+servers: 1
+agents: 1
+
+# API server.
+kubeAPI:
+  host: "0.0.0.0"
+  hostIP: "127.0.0.1"
+  hostPort: "6445"
+
+# To access ArgoCD if needed.
+ports:
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+
+# Auto deployed manifests.
+files:
+  - description: Bootstrap
+    source: argocd-bootstrap-manifests.yaml
+    destination: k3s-manifests/argocd.yaml
+    nodeFilters:
+    - "server:*"
