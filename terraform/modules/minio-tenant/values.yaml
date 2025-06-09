@@ -1,0 +1,40 @@
+tenant:
+  name: ${tenant_name}
+  serviceMetadata:
+    minioServiceLabels:
+      app: minio
+  pools:
+    - servers: ${pool_servers}
+      name: pool-0
+      volumesPerServer: ${pool_volumes}
+      size: ${pool_size}
+  metrics:
+    enabled: ${metrics_enabled}
+  certificate:
+    requestAutoCert: ${request_auto_cert}
+  buckets:
+    - name: ${bucket_name}
+  users:
+    - name: ${user_name}
+      accessKey: ${access_key}
+      secretKey: ${secret_key}
+
+  prometheusOperator: ${prometheus_operator_enabled}
+  env:
+    - name: MINIO_PROMETHEUS_AUTH_TYPE
+      value: "${prometheus_auth_type}"
+
+extraResources:
+  - |
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: ${service_monitor_name}
+    spec:
+      selector:
+        matchLabels:
+          app: minio
+      endpoints:
+        - port: http-minio
+          interval: ${metrics_interval}
+          path: /minio/v2/metrics/cluster
