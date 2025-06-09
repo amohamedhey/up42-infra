@@ -11,9 +11,9 @@ graph TD
     A[Kubernetes Cluster] --> B[MinIO Operator]
     B --> C[MinIO Tenant]
     C --> D[S3 Storage]
-    C --> E[Web Interface]
-    E --> F[Grafana Dashboards]
-    C --> G[Prometheus Metrics]
+    D --> E[Web Interface s3www]
+    G --> F[Grafana Dashboards]
+    A --> G[Prometheus Metrics]
     G --> H[Monitoring Stack]
 ```
 
@@ -112,6 +112,14 @@ kubectl get pods -n tenant-ns
 kubectl port-forward svc/s3www 8080:80 -n tenant-ns
 ```
 
+## Access the Web Interface
+
+➡️ [UP42 Web UI](http://s3www.up42.abdalazizmoh.com)
+
+## Access ArgoCD Dashboard
+
+➡️ [ArgoCD UI](http://argocd.up42.abdalazizmoh.com)
+
 ## Configuration
 
 ### MinIO Configuration
@@ -209,36 +217,6 @@ kubectl logs -n tenant-ns -l app=minio
    - Network isolation
    - Resource limits and requests
 
-## Maintenance
-
-### Backup and Recovery
-
-1. **MinIO Data Backup**
-   ```bash
-   # Backup MinIO data
-   mc admin cluster export myminio/ > backup.json
-   ```
-
-2. **Configuration Backup**
-   ```bash
-   # Export Terraform state
-   terraform state pull > terraform.tfstate.backup
-   ```
-
-### Updates and Upgrades
-
-1. **MinIO Operator Updates**
-   ```bash
-   # Update MinIO operator
-   terraform apply -var="chart_version=<new_version>"
-   ```
-
-2. **Terraform Module Updates**
-   ```bash
-   # Update modules
-   terraform get -update
-   ```
-
 ## Troubleshooting
 
 ### Common Issues
@@ -276,3 +254,4 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## License
 
 This project is licensed under the terms of the license included in the repository.
+
