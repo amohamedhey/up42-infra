@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "-30"
+spec:
+  destination:
+    name: in-cluster
+    namespace: monitoring
+  project: up42-apps
+  source: null
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 73.2.0
+      helm:
+        skipCrds: true
+        releaseName: prometheus
+        valueFiles:
+          - $manifests/gitops/values/prometheus.yaml
+    - ref: manifests
+      repoURL: https://github.com/amohamedhey/up42-infra
+      targetRevision: feat/enhance-task-doc-and-automation
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

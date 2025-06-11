@@ -1,0 +1,7 @@
+ingress:
+  enabled: true
+  hosts:
+    - host: s3www.up42.abdalazizmoh.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

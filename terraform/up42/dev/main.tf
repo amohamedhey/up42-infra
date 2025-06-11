@@ -37,7 +37,7 @@ module "minio_tenant" {
   tenant_name  = "up42-minio"
   pool_servers = 2
   pool_volumes = 2
-  pool_size    = "500Mi"
+  pool_size    = "10Mi"
   bucket_name  = var.minio_bucket
 
   # Credentials - these should be provided via a secure method

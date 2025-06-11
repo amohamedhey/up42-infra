@@ -6,7 +6,7 @@ metadata:
 
 # Cluster resources.
 servers: 1
-agents: 1
+agents: 2
 
 # API server.
 kubeAPI:
