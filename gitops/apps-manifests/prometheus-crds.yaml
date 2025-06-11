@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-crds
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "-40"
+spec:
+  destination:
+    name: in-cluster
+    namespace: kube-system
+  project: up42-apps
+  source: null
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 73.2.0
+      helm:
+        releaseName: prometheus
+        valueFiles:
+          - $manifests/gitops/values/prometheus-crds.yaml
+    - ref: manifests
+      repoURL: https://github.com/amohamedhey/up42-infra
+      targetRevision: master
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Replace=true

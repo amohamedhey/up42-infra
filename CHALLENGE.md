@@ -60,19 +60,19 @@ The solution was designed with the following principles in mind:
 **Considered Alternatives:**
 #### 🚀 Argo CD: GitOps for Kubernetes
 
-- 🔁 **GitOps Workflow**  
+- 🔁 **GitOps Workflow**
   Automatically syncs your Kubernetes cluster with your Git repository — Git is the single source of truth.
 
-- 🔄 **Continuous Delivery**  
+- 🔄 **Continuous Delivery**
   Supports real-time syncing and drift detection. Automatically or manually apply changes based on Git updates.
 
-- 👁️ **UI & Visualization**  
+- 👁️ **UI & Visualization**
   Comes with a web UI to view application health, sync status, and live diffs between Git and the cluster.
 
-- 🎯 **Native Kubernetes Integration**  
+- 🎯 **Native Kubernetes Integration**
   Fully understands Kubernetes resources. Works seamlessly with raw YAML, Helm, Kustomize, and Jsonnet.
 
-- 🔒 **Team-Friendly & Auditable**  
+- 🔒 **Team-Friendly & Auditable**
   Git-based workflows with RBAC, audit logs, and multi-team support out of the box.
 
 ## Implementation Details
@@ -229,4 +229,4 @@ The implemented solution provides a solid foundation for a production-ready S3 s
 
 The modular design allows for easy updates and modifications, while the documentation ensures that other engineers can understand and maintain the system. The solution is ready for production use, with appropriate security measures and monitoring in place.
 
-Future improvements will focus on enhancing high availability, security, and automation, making the solution even more robust and maintainable. 
+Future improvements will focus on enhancing high availability, security, and automation, making the solution even more robust and maintainable.

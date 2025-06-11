@@ -15,6 +15,24 @@ spec:
   version: 9.0.0
   targetnamespace: argocd
   valuesContent: |
+    controller:
+      resources:
+        requests:
+          cpu: 250m
+          ephemeral-storage: 50Mi
+          memory: 256Mi
+    server:
+      resources:
+        requests:
+          cpu: 250m
+          ephemeral-storage: 50Mi
+          memory: 256Mi
+    repoServer:
+      resources:
+        requests:
+          cpu: 250m
+          ephemeral-storage: 50Mi
+          memory: 256Mi
     server:
       insecure: true
       extraArgs:
@@ -29,7 +47,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
   name: controller
-  namespace: up42-dev
+  namespace: argocd
 spec:
   description: Platform controller resources
   clusterResourceWhitelist:
@@ -40,7 +58,7 @@ spec:
       namespace: argocd
       server: https://kubernetes.default.svc
   sourceRepos:
-    - https://github.com/abdalazizmon/up42-infra
+    - https://github.com/amohamedhey/up42-infra
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -52,9 +70,9 @@ metadata:
 spec:
   project: controller
   source:
-    repoURL: https://github.com/abdalazizmon/up42-infra
-    path: bootstrap
-    targetRevision: main
+    repoURL: https://github.com/amohamedhey/up42-infra
+    path: gitops/apps-manifests
+    targetRevision: master
   destination:
     name: in-cluster
     namespace: argocd
@@ -68,3 +86,29 @@ spec:
         duration: 5s
         maxDuration: 5m0s
         factor: 2
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: up42-apps
+  namespace: argocd
+spec:
+  description: Platform controller resources
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  destinations:
+    - name: in-cluster
+      namespace: monitoring
+    - name: in-cluster
+      namespace: tenant-ns
+    - name: in-cluster
+      namespace: minio-operator
+    - name: in-cluster
+      namespace: s3www
+    - name: in-cluster
+      namespace: kube-system
+  sourceRepos:
+    - https://github.com/amohamedhey/up42-infra
+    - https://operator.min.io/
+    - https://prometheus-community.github.io/helm-charts

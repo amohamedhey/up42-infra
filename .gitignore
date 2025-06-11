@@ -3,6 +3,9 @@
 **/terraform.tfstate.*
 **/.terraform/
 
+# ignore .terraform.lock.hcl under tf modules terraform/modules/*/.terraform.lock.hcl
+terraform/modules/*/.terraform.lock.hcl
+
 # .tfstate files
 *.tfstate
 *.tfstate.*

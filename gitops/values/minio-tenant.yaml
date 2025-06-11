@@ -1,0 +1,36 @@
+tenant:
+  name: up42-minio
+  serviceMetadata:
+    minioServiceLabels:
+      app: minio
+  pools:
+    - servers: 2
+      name: pool-0
+      volumesPerServer: 2
+      size: 10Mi
+  metrics:
+    enabled: true
+  certificate:
+    requestAutoCert: false
+  buckets:
+    - name: up42-bucket
+
+  prometheusOperator: true
+  env:
+    - name: MINIO_PROMETHEUS_AUTH_TYPE
+      value: public
+
+extraResources:
+  - |
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: up42-minio
+    spec:
+      selector:
+        matchLabels:
+          app: minio
+      endpoints:
+        - port: http-minio
+          interval: 30s
+          path: /minio/v2/metrics/cluster

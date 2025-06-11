@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio-operator
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "-30"
+spec:
+  destination:
+    name: in-cluster
+    namespace: minio-operator
+  project: up42-apps
+  source: null
+  sources:
+    - repoURL: https://operator.min.io/
+      chart: operator
+      targetRevision: 7.1.1
+      helm:
+        releaseName: minio-operator
+    - ref: manifests
+      repoURL: https://github.com/amohamedhey/up42-infra
+      targetRevision: master
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
