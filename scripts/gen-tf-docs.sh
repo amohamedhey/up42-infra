@@ -13,4 +13,3 @@ for dir in $(find . -type f -name "main.tf" -exec dirname {} \;); do
   echo "Running terraform-docs in $dir"
   terraform-docs markdown table "$dir" > "$dir/README.md"
 done
-

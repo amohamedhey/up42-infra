@@ -37,7 +37,7 @@ The infrastructure consists of the following key components:
 
 ```bash
 # Install k3d
-brew install k3d 
+brew install k3d
 
 # Install Terraform
 brew install terraform
@@ -86,7 +86,7 @@ cp terraform.tfvars.example terraform.tfvars
 ```bash
 # Deploy k3d cluster
 make deploy
-# Or 
+# Or
 k3d k3d cluster create --config bootstrap/k3d-bootstrap-cluster.yaml
 
 
@@ -134,11 +134,11 @@ module "minio_tenant" {
   pool_servers = 2
   pool_volumes = 2
   pool_size    = "1Gi"
-  
+
   # Access credentials
   access_key = var.minio_access_key
   secret_key = var.minio_secret_key
-  
+
   # Additional configuration
   metrics_enabled = true
   prometheus_operator_enabled = true
@@ -155,7 +155,7 @@ module "s3www" {
 
   release_name = "s3www"
   namespace    = "tenant-ns"
-  
+
   # Resource configuration
   resources = {
     requests = {
@@ -225,7 +225,7 @@ kubectl logs -n tenant-ns -l app=minio
    ```bash
    # Check pod status
    kubectl describe pod -n tenant-ns -l app=minio
-   
+
    # Check logs
    kubectl logs -n tenant-ns -l app=minio
    ```
@@ -234,7 +234,7 @@ kubectl logs -n tenant-ns -l app=minio
    ```bash
    # Check service status
    kubectl get svc -n tenant-ns s3www
-   
+
    # Check pod status
    kubectl get pods -n tenant-ns -l app=s3www
    ```
@@ -254,4 +254,3 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## License
 
 This project is licensed under the terms of the license included in the repository.
-

@@ -6,4 +6,3 @@ if commit.committer_email == b"abdalaziz.ali87@gmail.com":
     commit.committer_name = b"Abdalaziz Mohamed"
     commit.committer_email = b"abdalaziz.ali87@icloud.com"
 ' --force
-
