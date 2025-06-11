@@ -27,3 +27,10 @@ repos:
       - id: check-merge-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: terraform-docs-recursive
+        name: Generate terraform-docs in all subfolders
+        entry: bash scripts/gen-tf-docs.sh
+        language: system
+        files: \.tf$
