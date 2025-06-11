@@ -23,3 +23,9 @@ variable "minio_endpoint" {
   type        = string
   default     = "http://minio.tenant-ns.svc.cluster.local"
 }
+
+variable "s3www_ingress_host" {
+  description = "Ingress host for s3www web application"
+  type        = string
+  default     = "s3www.up42.abdalazizmoh.com"
+}

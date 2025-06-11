@@ -1,16 +1,5 @@
-# install dependencies prometheus and ingress-nginx in monitoring and ingress-nginx namespaces respectively
+# install dependencies prometheus in monitoring namespaces
 # prometheus is used for monitoring and alerting
-# ingress-nginx is used for ingress traffic
-
-# ingress-nginx
-# resource "helm_release" "ingress-nginx" {
-#   name       = "ingress-nginx"
-#   namespace  = "ingress-nginx"
-#   repository = "https://kubernetes.github.io/ingress-nginx"
-#   create_namespace = true
-#   chart      = "ingress-nginx"
-#   version    = "4.12.3"
-# }
 
 # prometheus
 resource "helm_release" "prometheus" {
@@ -26,6 +15,7 @@ resource "helm_release" "prometheus" {
   ]
 }
 
+# minio-operator is used for managing minio clusters
 module "minio_operator" {
   source = "../../modules/minio-operator"
 
@@ -35,6 +25,7 @@ module "minio_operator" {
   chart_version    = "7.1.1"
 }
 
+# minio-tenant is used for managing minio tenants
 module "minio_tenant" {
   source = "../../modules/minio-tenant"
 
@@ -47,9 +38,9 @@ module "minio_tenant" {
   pool_servers = 2
   pool_volumes = 2
   pool_size    = "500Mi"
-  bucket_name  = "up42-bucket"
+  bucket_name  = var.minio_bucket
 
-  # Credentials - these should be provided via environment variables or a secure method
+  # Credentials - these should be provided via a secure method
   access_key = var.minio_access_key
   secret_key = var.minio_secret_key
 
@@ -67,7 +58,7 @@ module "s3www" {
   minio_bucket     = var.minio_bucket
   minio_endpoint   = var.minio_endpoint
   ingress_enabled  = true
-  ingress_host     = "s3www.up42.abdalazizmoh.com"
+  ingress_host     = var.s3www_ingress_host
 
   replica_count = 2
 

@@ -1,4 +1,4 @@
 minio_access_key = "minio"
 minio_secret_key = "minio123"
 minio_bucket     = "up42-bucket"
-minio_endpoint   = "http://minio.tenant-ns.svc.cluster.local:9000"
+minio_endpoint   = "http://minio.tenant-ns.svc.cluster.local"
