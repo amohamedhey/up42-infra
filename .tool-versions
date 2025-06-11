@@ -1,0 +1,5 @@
+argocd 2.14.11
+k3d 5.8.3
+kubectl 1.31.0
+terraform v1.5.5
+helm 3.17.3
