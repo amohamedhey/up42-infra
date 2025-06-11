@@ -7,7 +7,7 @@ repos:
         args:
           - --output-file=README.md
           - --template-files=README.md.gotmpl
-          - --chart-search-root=helm/s3wwww/
+          - --chart-search-root=helm/s3www/
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.99.3
     hooks:

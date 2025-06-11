@@ -28,7 +28,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_values"></a> [additional\_values](#input\_additional\_values) | Additional values to set in the Helm chart | `map(string)` | `{}` | no |
 | <a name="input_autoscaling_enabled"></a> [autoscaling\_enabled](#input\_autoscaling\_enabled) | Whether to enable autoscaling | `bool` | `true` | no |
-| <a name="input_chart_name"></a> [chart\_name](#input\_chart\_name) | Name of the Helm chart | `string` | `"s3wwww"` | no |
+| <a name="input_chart_name"></a> [chart\_name](#input\_chart\_name) | Name of the Helm chart | `string` | `"s3www"` | no |
 | <a name="input_chart_repository"></a> [chart\_repository](#input\_chart\_repository) | Helm chart repository URL | `string` | `"../../../helm"` | no |
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of the Helm chart | `string` | `"0.1.0"` | no |
 | <a name="input_configmap_data"></a> [configmap\_data](#input\_configmap\_data) | Data to be stored in the ConfigMap | `map(string)` | <pre>{<br/>  "index.html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Embedded Giphy GIF</title>\n</head>\n<body>\n  <h1>Enjoy this GIF!</h1>\n  <iframe src=\"https://giphy.com/embed/VdiQKDAguhDSi37gn1\" width=\"480\" height=\"270\" frameBorder=\"0\" allowFullScreen></iframe>\n  <p><a href=\"https://giphy.com/gifs/VdiQKDAguhDSi37gn1\">View on Giphy</a></p>\n</body>\n</html>\n"<br/>}</pre> | no |

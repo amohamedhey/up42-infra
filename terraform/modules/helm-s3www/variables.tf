@@ -25,7 +25,7 @@ variable "chart_repository" {
 variable "chart_name" {
   description = "Name of the Helm chart"
   type        = string
-  default     = "s3wwww"
+  default     = "s3www"
 }
 
 variable "chart_version" {

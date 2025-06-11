@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "s3wwww.fullname" . }}
+  name: {{ include "s3www.fullname" . }}
   labels:
-    {{- include "s3wwww.labels" . | nindent 4 }}
+    {{- include "s3www.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "s3wwww.fullname" . }}
+    name: {{ include "s3www.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

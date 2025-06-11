@@ -72,7 +72,7 @@ spec:
   source:
     repoURL: https://github.com/amohamedhey/up42-infra
     path: gitops/apps-manifests
-    targetRevision: feat/enhance-task-doc-and-automation
+    targetRevision: master
   destination:
     name: in-cluster
     namespace: argocd

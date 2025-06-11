@@ -14,15 +14,15 @@ spec:
   source: null
   sources:
     - repoURL: https://github.com/amohamedhey/up42-infra.git
-      path: helm/s3wwww
-      targetRevision: feat/enhance-task-doc-and-automation
+      path: helm/s3www
+      targetRevision: master
       helm:
         releaseName: dev
         valueFiles:
           - $manifests/gitops/values/s3www.yaml
     - ref: manifests
       repoURL: https://github.com/amohamedhey/up42-infra
-      targetRevision: feat/enhance-task-doc-and-automation
+      targetRevision: master
   syncPolicy:
     automated:
       prune: true

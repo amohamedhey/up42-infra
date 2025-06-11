@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "s3wwww.fullname" . }}
+  name: {{ include "s3www.fullname" . }}
   labels:
-    {{- include "s3wwww.labels" . | nindent 4 }}
+    {{- include "s3www.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -35,7 +35,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "s3wwww.fullname" $ }}
+                name: {{ include "s3www.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}

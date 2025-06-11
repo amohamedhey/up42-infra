@@ -22,7 +22,7 @@ spec:
           - $manifests/gitops/values/prometheus-crds.yaml
     - ref: manifests
       repoURL: https://github.com/amohamedhey/up42-infra
-      targetRevision: feat/enhance-task-doc-and-automation
+      targetRevision: master
   syncPolicy:
     automated:
       prune: true
