@@ -14,16 +14,10 @@ kubeAPI:
   hostIP: "127.0.0.1"
   hostPort: "6445"
 
-# To access APP and ArgoCD if needed.
+# To access APP
 ports:
   - port: 80:80
     nodeFilters:
       - loadbalancer
 
-# Auto deployed manifests.
-files:
-  - description: Bootstrap
-    source: argocd-bootstrap-manifests.yaml
-    destination: k3s-manifests/argocd.yaml
-    nodeFilters:
-    - "server:*"
+

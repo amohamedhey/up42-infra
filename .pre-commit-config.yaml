@@ -8,6 +8,15 @@ repos:
           - --output-file=README.md
           - --template-files=README.md.gotmpl
           - --chart-search-root=helm/s3wwww/
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.99.3
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_validate
+      - id: terraform_docs
+        args:
+          - '--args=--lockfile=false'
+      - id: terraform_tflint
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
