@@ -79,7 +79,7 @@ For terraform setup choose your target environment (dev) and prepare the configu
 
 ```bash
 # For development
-cd terraform/environments/dev
+cd terraform/up42/dev
 cp terraform.tfvars.example terraform-dev.tfvars
 
 # Edit terraform.tfvars with your specific values

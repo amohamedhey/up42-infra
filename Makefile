@@ -122,16 +122,16 @@ deploy-solution1: create-k3d-solution1 deploy-tf-solution1 healthcheck
 deploy-tf-solution1: terraform-validate terraform-plan terraform-apply
 
 terraform-validate:
-	cd terraform/environments/dev && terraform init && terraform fmt && terraform validate
+	cd terraform/up42/dev && terraform init && terraform fmt && terraform validate
 
 terraform-plan:
-	cd terraform/environments/dev && terraform plan
+	cd terraform/up42/dev && terraform plan
 
 terraform-apply:
-	cd terraform/environments/dev &&terraform apply -auto-approve
+	cd terraform/up42/dev &&terraform apply -auto-approve
 
 terraform-destroy:
-	cd terraform/environments/dev && terraform init && terraform destroy -auto-approve
+	cd terraform/up42/dev && terraform init && terraform destroy -auto-approve
 
 clean:
 	k3d cluster delete up42-dev
