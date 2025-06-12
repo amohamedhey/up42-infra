@@ -104,6 +104,8 @@ make deploy-solution2
 k3d cluster create --config bootstrap/k3d-bootstrap-cluster.yaml
 ```
 
+###### Average time to service to be ready 7-8 minutes
+
 ##### Access the Web Interface ➡️ [UP42 Web UI](http://s3www.up42.abdalazizmoh.com)
 
 ##### Access ArgoCD Dashboard ➡️ [ArgoCD UI](http://argocd.up42.abdalazizmoh.com)
@@ -173,10 +175,10 @@ kubectl logs -n s3www -l app.kubernetes.io/instance=dev
 1. **MinIO Pod Not Starting**
    ```bash
    # Check pod status
-   kubectl describe pod -n tenant-ns -l app=minio
+   kubectl describe pod -n tenant-ns -l v1.min.io/tenant=up42-minio
 
    # Check logs
-   kubectl logs -n tenant-ns -l app=minio
+   kubectl logs -n tenant-ns -l v1.min.io/tenant=up42-minio
    ```
 
 2. **Web Interface Not Accessible**

@@ -24,7 +24,7 @@ else
     $(error Unsupported operating system or package manager not found)
 endif
 
-.PHONY: deploy-solution1 deploy-solution2 create-k3d-solution1 deploy-tf-solution1 terraform-validate terraform-plan terraform-apply terraform-destroy check-deps install-deps check-docker check-k3d install-docker install-k3d check-pkg-manager
+.PHONY: deploy-solution1 deploy-solution2 create-k3d-solution1 deploy-tf-solution1 terraform-validate terraform-plan terraform-apply terraform-destroy check-deps install-deps check-docker check-k3d install-docker install-k3d check-pkg-manager healthcheck clean
 
 
 # Check all dependencies
@@ -109,13 +109,15 @@ else
 	@curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 endif
 
-deploy-solution2:
+deploy-solution2: create-k3d-solution2 healthcheck
+
+create-k3d-solution2:
 	k3d cluster create --config bootstrap/k3d-bootstrap-cluster.yaml
 
 create-k3d-solution1:
 	k3d cluster create --config bootstrap2/k3d-bootstrap-cluster.yaml
 
-deploy-solution1: create-k3d-solution1 deploy-tf-solution1
+deploy-solution1: create-k3d-solution1 deploy-tf-solution1 healthcheck
 
 deploy-tf-solution1: terraform-validate terraform-plan terraform-apply
 
