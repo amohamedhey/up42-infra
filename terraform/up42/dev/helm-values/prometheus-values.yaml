@@ -7,3 +7,9 @@ prometheus:
     podMonitorSelectorNilUsesHelmValues: false
     probeSelectorNilUsesHelmValues: false
     scrapeConfigSelectorNilUsesHelmValues: false
+
+grafana:
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.up42.abdalazizmoh.com
