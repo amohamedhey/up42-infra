@@ -43,7 +43,7 @@ variable "pool_volumes" {
 variable "pool_size" {
   description = "Size of each volume in the MinIO tenant pool (e.g., '10Gi')"
   type        = string
-  default     = "10Mi"
+  default     = "100Mi"
 }
 
 variable "access_key" {

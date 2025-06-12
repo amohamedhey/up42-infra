@@ -9,14 +9,14 @@ The solution was designed with the following principles in mind:
    - Reproducible deployments across environments
    - Automated infrastructure management
    - using terraform-docs to generate documentation
-   - using pre-commit hooks – Format Terraform code before commits.
+   - using pre-commit hooks – format and validate Terraform code before commits.
 
     **Enhancement:**
-    - Separate terrafom modules in a separate github repo to be able to version control them.
-    - Static analysis for security misconfigs.
-    - Utilize Atlantis to implement GitOps workflows with Terraform
-    - Using Infracost to show cloud cost estimates and FinOps best practices for Terraform
-    - Use an appropriate remote backend for managing Terraform state files
+    - Separate Terraform modules into dedicated GitHub repository for better version control.
+    - Perform static analysis to detect security misconfigurations.
+    - Utilize Atlantis to implement GitOps workflows for Terraform.
+    - Use Infracost to provide cloud cost estimates and follow FinOps best practices for Terraform.
+    - Configure an appropriate remote backend for managing Terraform state files.
 
 2. **Modularity and Reusability**
    - Reusable Terraform modules
@@ -32,7 +32,7 @@ The solution was designed with the following principles in mind:
 
 ### 1. MinIO as S3 Storage Solution
 
-**Why using MinIO Charts?**
+**Why using MinIO Charts not build a custom solution?**
 - For the limitation of the time using Using MinIO Helm Charts.
 - Faster, cleaner deployment with less YAML.
 
@@ -57,7 +57,7 @@ The solution was designed with the following principles in mind:
 - Provider ecosystem
 - Community support
 
-**Considered Alternatives:**
+**Considered Alternatives to apply k8s manifests:**
 #### 🚀 Argo CD: GitOps for Kubernetes
 
 - 🔁 **GitOps Workflow**
@@ -108,7 +108,7 @@ The solution is organized into three main modules:
 
 #### Security Trade-offs:
 1. **Certificate Management**
-   - Chose to use self-signed certificates for simplicity
+   - Choose to use self-signed certificates for simplicity
    - Trade-off: Less secure than proper CA-signed certificates
    - Future improvement: Implement proper certificate management
 
@@ -132,7 +132,7 @@ The solution is organized into three main modules:
 2. **Logging**
    - Basic pod logging
    - No centralized logging solution
-   - Future improvement: Implement ELK or similar stack
+   - Future improvement: Implement ELK or Loki or similar stack
 
 ## Challenges and Solutions
 
@@ -143,9 +143,9 @@ The solution is organized into three main modules:
 - State locking and consistency
 
 **Solution:**
-- Implemented remote state storage
+- Implemented local state storage for the demo; recommend using remote state storage for production environments.
 - Added state locking mechanism
-- Documented state management procedures
+- Documented state management procedures (Use Atalntis for GitOps)
 
 ### 2. Resource Management
 
@@ -166,8 +166,8 @@ The solution is organized into three main modules:
 
 **Solution:**
 - Implemented persistent volume claims
-- Added backup procedures
-- Documented recovery processes
+- Added backup procedures (missing)
+- Documented recovery processes (missing)
 
 ## Future Improvements
 
@@ -196,15 +196,15 @@ The solution is organized into three main modules:
 ### 3. Monitoring and Observability
 
 **Planned Improvements:**
-- Implement centralized logging
-- Add custom metrics
-- Enhance alerting
-- Add tracing
+- Set up centralized logging
+- Add custom application metrics
+- Improve alerting coverage
+- Enable distributed tracing
 
 ### 4. Automation
 
 **Planned Improvements:**
-- Implement CI/CD pipeline
+- Implement CI/CD pipeline for tf/k8s
 - Add automated testing
 - Implement automated backups
 - Add automated scaling
