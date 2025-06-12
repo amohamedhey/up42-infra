@@ -35,7 +35,7 @@ No modules.
 | <a name="input_metrics_interval"></a> [metrics\_interval](#input\_metrics\_interval) | Interval for metrics collection | `string` | `"30s"` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | Kubernetes namespace for the MinIO tenant | `string` | `"tenant-ns"` | no |
 | <a name="input_pool_servers"></a> [pool\_servers](#input\_pool\_servers) | Number of servers in the MinIO tenant pool | `number` | `2` | no |
-| <a name="input_pool_size"></a> [pool\_size](#input\_pool\_size) | Size of each volume in the MinIO tenant pool (e.g., '10Gi') | `string` | `"10Mi"` | no |
+| <a name="input_pool_size"></a> [pool\_size](#input\_pool\_size) | Size of each volume in the MinIO tenant pool (e.g., '10Gi') | `string` | `"100Mi"` | no |
 | <a name="input_pool_volumes"></a> [pool\_volumes](#input\_pool\_volumes) | Number of volumes per server in the MinIO tenant pool | `number` | `2` | no |
 | <a name="input_prometheus_auth_type"></a> [prometheus\_auth\_type](#input\_prometheus\_auth\_type) | Authentication type for Prometheus metrics | `string` | `"public"` | no |
 | <a name="input_prometheus_operator_enabled"></a> [prometheus\_operator\_enabled](#input\_prometheus\_operator\_enabled) | Whether to enable Prometheus operator integration | `bool` | `true` | no |

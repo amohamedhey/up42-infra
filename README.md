@@ -4,16 +4,18 @@
 
 This repository contains the Infrastructure as Code (IaC) implementation for the UP42 infrastructure, focusing on deploying a MinIO-based S3 storage solution with a web interface. The solution is designed to be deployed on Kubernetes and managed through Terraform.
 
+Note: another solution introduced is ArgoCD
+
 ### Architecture
 
 ```mermaid
 graph TD
-    A[Kubernetes Cluster] --> B[MinIO Operator]
-    B --> C[MinIO Tenant]
+    A[Kubernetes Cluster] --> B[Ingress]
+    B --> C[Web Interface s3www]
     C --> D[S3 Storage]
-    D --> E[Web Interface s3www]
+    D <--> E[MinIO Operator/Tenant]
     G --> F[Grafana Dashboards]
-    A --> G[Prometheus Metrics]
+    B --> G[Prometheus Metrics]
     G --> H[Monitoring Stack]
 ```
 
@@ -28,12 +30,14 @@ The infrastructure consists of the following key components:
 ## Prerequisites
 
 - Kubernetes cluster (tested with k3d)
+- k3d ~= v5.8.3
 - Terraform >= 1.0.0
 - Helm >= 3.0.0
-- kubectl
+- kubectl ~ v1.33.1
 - Make (for using the provided Makefile)
+- Available resources (2 CPU, 2-3GB RAM)
 
-### Required Tools Installation
+#### Required Tools Installation (on MacOS) - for Linux find your way :D
 
 ```bash
 # Install k3d
@@ -53,13 +57,13 @@ brew install kubectl
 
 ```
 .
-├── bootstrap/              # Bootstrap scripts and configurations
+├── bootstrap/             # Bootstrap configurations for k3d cluster
+├── bootstrap2             # Alternative Bootstrap configurations for k3d cluster
 ├── grafana-dashboards/    # Grafana dashboard definitions
 ├── helm/                  # Helm charts
 ├── terraform/             # Terraform configurations
 │   ├── environments/      # Environment-specific configurations
 │   │   ├── dev/          # Development environment
-│   │   └── prod/         # Production environment
 │   └── modules/          # Reusable Terraform modules
 │       ├── minio-operator/  # MinIO operator module
 │       ├── minio-tenant/    # MinIO tenant module
@@ -71,12 +75,12 @@ brew install kubectl
 
 ### 1. Environment Setup
 
-Choose your target environment (dev/prod) and prepare the configuration:
+For terraform setup choose your target environment (dev) and prepare the configuration (it's not required there is a default values):
 
 ```bash
 # For development
 cd terraform/environments/dev
-cp terraform.tfvars.example terraform.tfvars
+cp terraform.tfvars.example terraform-dev.tfvars
 
 # Edit terraform.tfvars with your specific values
 ```
@@ -84,19 +88,31 @@ cp terraform.tfvars.example terraform.tfvars
 ### 2. Infrastructure Deployment
 
 ```bash
-# Deploy k3d cluster
-make deploy
+# Deploy solution1 using k3d cluster and terraform
+make deploy-solution1
 # Or
-k3d k3d cluster create --config bootstrap/k3d-bootstrap-cluster.yaml
+k3d cluster create --config bootstrap2/k3d-bootstrap-cluster.yaml
+terraform init && terraform apply -auto-approve
+# Or if you are not using k3d and using minikube just create a cluster and run tf command
+minikube start --cpus 2 --memory 4000MB
+minikube addons enable ingress # This isn't the ideal solution, this approach was chosen to simplify the demo.
 
 
-# Review the planned changes
-terraform plan
+# Deploy solution2 using k3d cluster and argocd
+make deploy-solution2
+# Or
+k3d cluster create --config bootstrap/k3d-bootstrap-cluster.yaml
+```
 
-# Apply the configuration
-terraform apply
-#Or
-terraform-apply -auto-approve
+##### Access the Web Interface ➡️ [UP42 Web UI](http://s3www.up42.abdalazizmoh.com)
+
+##### Access ArgoCD Dashboard ➡️ [ArgoCD UI](http://argocd.up42.abdalazizmoh.com)
+
+##### Monitoring and Observability ➡️ [Grafana UI](http://grafana.up42.abdalazizmoh.com)
+
+```bash
+# get secret for grafana instance
+kubectl -n monitoring get secrets prometheus-grafana -o yaml | yq '.data | to_entries | .[] | {.key: (.value|@base64d)}'
 ```
 
 ### 3. Verification
@@ -108,114 +124,47 @@ kubectl get pods -n minio-operator
 # Check MinIO tenant status
 kubectl get pods -n tenant-ns
 
-# Access the web interface
-kubectl port-forward svc/s3www 8080:80 -n tenant-ns
+# Check web interface status
+kubectl get pods -n s3www
 ```
 
-## Access the Web Interface
+### 3. Cleanup
 
-➡️ [UP42 Web UI](http://s3www.up42.abdalazizmoh.com)
-
-## Access ArgoCD Dashboard
-
-➡️ [ArgoCD UI](http://argocd.up42.abdalazizmoh.com)
-
-## Configuration
-
-### MinIO Configuration
-
-The MinIO tenant can be configured through Terraform variables:
-
-```hcl
-module "minio_tenant" {
-  source = "../../modules/minio-tenant"
-
-  tenant_name = "up42-minio"
-  pool_servers = 2
-  pool_volumes = 2
-  pool_size    = "1Gi"
-
-  # Access credentials
-  access_key = var.minio_access_key
-  secret_key = var.minio_secret_key
-
-  # Additional configuration
-  metrics_enabled = true
-  prometheus_operator_enabled = true
-}
+```bash
+# Clean up cluster and deployment
+make clean
 ```
-
-### Web Interface Configuration
-
-The web interface can be configured through the helm-s3www module:
-
-```hcl
-module "s3www" {
-  source = "../../modules/helm-s3www"
-
-  release_name = "s3www"
-  namespace    = "tenant-ns"
-
-  # Resource configuration
-  resources = {
-    requests = {
-      cpu    = "100m"
-      memory = "128Mi"
-    }
-    limits = {
-      cpu    = "200m"
-      memory = "256Mi"
-    }
-  }
-}
-```
-
-## Monitoring and Observability
 
 ### Metrics
 
 The solution includes:
 - Prometheus metrics for MinIO
-- Grafana dashboards for visualization
+- Grafana dashboards for visualization (Importing the dashboard requires an additional step: execute scripts/import-dashboard.sh)
 - ServiceMonitor for metrics collection
 
 Access metrics:
 ```bash
 # Port forward Prometheus
-kubectl port-forward svc/prometheus-server 9090:9090 -n monitoring
+kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
 
 # Access Grafana
-kubectl port-forward svc/grafana 3000:3000 -n monitoring
+kubectl port-forward svc/prometheus-grafana 3000:3000 -n monitoring
 ```
+Or using URL: [Grafana UI](http://grafana.up42.abdalazizmoh.com)
 
 ### Logging
 
 Logs can be accessed through:
 ```bash
 # MinIO operator logs
-kubectl logs -n minio-operator -l app=minio-operator
+kubectl logs -n minio-operator -l app=operator=leader
 
 # MinIO tenant logs
-kubectl logs -n tenant-ns -l app=minio
+kubectl logs -n tenant-ns -l v1.min.io/tenant=up42-minio
+
+# Web interface logs
+kubectl logs -n s3www -l app.kubernetes.io/instance=dev
 ```
-
-## Security Considerations
-
-1. **Access Control**
-   - MinIO credentials are managed as sensitive variables
-   - RBAC is configured for Kubernetes resources
-   - Network policies restrict pod-to-pod communication
-
-2. **Data Protection**
-   - TLS encryption for data in transit
-   - Volume encryption for data at rest
-   - Regular backup procedures
-
-3. **Security Best Practices**
-   - Regular security updates
-   - Minimal RBAC permissions
-   - Network isolation
-   - Resource limits and requests
 
 ## Troubleshooting
 
@@ -233,10 +182,10 @@ kubectl logs -n tenant-ns -l app=minio
 2. **Web Interface Not Accessible**
    ```bash
    # Check service status
-   kubectl get svc -n tenant-ns s3www
+   kubectl get svc -n s3www dev
 
    # Check pod status
-   kubectl get pods -n tenant-ns -l app=s3www
+   kubectl get pods -n s3www -l app=s3www
    ```
 
 ### Support

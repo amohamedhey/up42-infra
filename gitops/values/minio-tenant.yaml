@@ -7,7 +7,7 @@ tenant:
     - servers: 2
       name: pool-0
       volumesPerServer: 2
-      size: 10Mi
+      size: 100Mi
   metrics:
     enabled: true
   certificate:
@@ -15,7 +15,7 @@ tenant:
   buckets:
     - name: up42-bucket
 
-  prometheusOperator: true
+  prometheusOperator: false
   env:
     - name: MINIO_PROMETHEUS_AUTH_TYPE
       value: public
